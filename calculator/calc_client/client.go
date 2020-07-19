@@ -7,6 +7,8 @@ import (
 
 	"github.com/dipjyotimetia/gogrpc/calculator/calcpb"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 func main() {
@@ -22,7 +24,9 @@ func main() {
 	defer cc.Close()
 
 	c := calcpb.NewSumServiceClient(cc)
-	doUnary(c)
+	// doUnary(c)
+	doErrorUnary(c, 10)
+	doErrorUnary(c, -2)
 }
 
 func doUnary(c calcpb.SumServiceClient) {
@@ -35,4 +39,25 @@ func doUnary(c calcpb.SumServiceClient) {
 		log.Fatalf("error while calling calc rpc %v", err)
 	}
 	log.Printf("response from sum %v", res)
+}
+
+func doErrorUnary(c calcpb.SumServiceClient, number int32) {
+	fmt.Println("Starting to do a sqrt call")
+
+	res, err := c.SquareRoot(context.Background(), &calcpb.SquareRootRequest{Number: number})
+
+	if err != nil {
+		resErr, ok := status.FromError(err)
+		if ok {
+			fmt.Println(resErr.Message())
+			fmt.Println(resErr.Code())
+			if resErr.Code() == codes.InvalidArgument {
+				fmt.Println("We probably sent a negative error")
+			}
+		} else {
+			log.Fatalf("Big error calling squareroot: %v", err)
+		}
+
+	}
+	fmt.Printf("Result of square root of %v", res)
 }
