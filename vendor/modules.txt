@@ -76,10 +76,11 @@ go.mongodb.org/mongo-driver/x/mongo/driver/session
 go.mongodb.org/mongo-driver/x/mongo/driver/topology
 go.mongodb.org/mongo-driver/x/mongo/driver/uuid
 go.mongodb.org/mongo-driver/x/mongo/driver/wiremessage
-# golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
+# golang.org/x/crypto v0.0.0-20201002170205-7f63de1d35b0
+## explicit
 golang.org/x/crypto/ocsp
 golang.org/x/crypto/pbkdf2
-# golang.org/x/net v0.0.0-20200904194848-62affa334b73
+# golang.org/x/net v0.0.0-20201002202402-0a1ea396d57c
 ## explicit
 golang.org/x/net/http/httpguts
 golang.org/x/net/http2
@@ -87,20 +88,19 @@ golang.org/x/net/http2/hpack
 golang.org/x/net/idna
 golang.org/x/net/internal/timeseries
 golang.org/x/net/trace
-# golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
+# golang.org/x/sync v0.0.0-20200930132711-30421366ff76
+## explicit
 golang.org/x/sync/errgroup
 golang.org/x/sync/semaphore
-# golang.org/x/sys v0.0.0-20200918174421-af09f7315aff
-## explicit
+# golang.org/x/sys v0.0.0-20200930185726-fdedc70b468f
 golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
 # golang.org/x/text v0.3.3
-## explicit
 golang.org/x/text/secure/bidirule
 golang.org/x/text/transform
 golang.org/x/text/unicode/bidi
 golang.org/x/text/unicode/norm
-# google.golang.org/genproto v0.0.0-20200918140846-d0d605568037
+# google.golang.org/genproto v0.0.0-20201002142447-3860012362da
 ## explicit
 google.golang.org/genproto/googleapis/rpc/status
 # google.golang.org/grpc v1.32.0
