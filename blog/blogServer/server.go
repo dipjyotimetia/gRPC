@@ -57,8 +57,8 @@ func (s server) CreateBlog(ctx context.Context, request *blogpb.CreateBlogReques
 }
 
 func (s server) ReadBlog(ctx context.Context, request *blogpb.ReadBlogRequest) (*blogpb.ReadBlogResponse, error) {
-	blogId := request.GetBlogId()
-	oid, err := primitive.ObjectIDFromHex(blogId)
+	blogID := request.GetBlogId()
+	oid, err := primitive.ObjectIDFromHex(blogID)
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, fmt.Sprintf("Cannot parse id %v", err))
 	}
@@ -126,7 +126,6 @@ func (*server) UpdateBlog(ctx context.Context, req *blogpb.UpdateBlogRequest) (*
 	return &blogpb.UpdateBlogResponse{
 		Blog: dataToBlogPb(data),
 	}, nil
-
 }
 
 func (*server) DeleteBlog(ctx context.Context, req *blogpb.DeleteBlogRequest) (*blogpb.DeleteBlogResponse, error) {
@@ -179,7 +178,6 @@ func (*server) ListBlog(req *blogpb.ListBlogRequest, stream blogpb.BlogService_L
 				codes.Internal,
 				fmt.Sprintf("Error while decoding data from MongoDB: %v", err),
 			)
-
 		}
 		stream.Send(&blogpb.ListBlogResponse{Blog: dataToBlogPb(data)})
 	}
@@ -193,8 +191,8 @@ func (*server) ListBlog(req *blogpb.ListBlogRequest, stream blogpb.BlogService_L
 }
 
 func main() {
-	//if we crash the go code, we get the file and line number
-	//log.SetFlags(log.LstdFlags | log.Lshortfile)
+	// if we crash the go code, we get the file and line number
+	// log.SetFlags(log.LstdFlags | log.Lshortfile)
 	fmt.Println("Blog service started")
 	lis, err := net.Listen("tcp", "0.0.0.0:50051") //nolint:gosec
 	if err != nil {

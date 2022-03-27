@@ -12,15 +12,19 @@ import (
 	"time"
 )
 
-type Latency struct {
-	Percentile int
-	TotalTime  time.Duration
+type ResultReport struct {
+	Name         string
+	TotalTime    time.Duration
+	Details      []runner.ResultDetail
+	AverageTime  time.Duration
+	TotalRequest uint64
 }
 
 func main() {
 	report, err := runner.Run(
 		"blog.BlogService.CreateBlog",
 		"localhost:50051",
+		runner.WithName("Create Blog"),
 		// runner.WithProtoFile("blog/blogPb/blog.proto", []string{}), //TODO: gRPC Reflection api is configured
 		runner.WithData(&blogpb.CreateBlogRequest{
 			Blog: &blogpb.Blog{
@@ -31,6 +35,8 @@ func main() {
 			}}),
 		runner.WithConcurrency(50),
 		runner.WithTotalRequests(300),
+		runner.WithConnections(20),
+		runner.WithConcurrencyDuration(time.Duration(time.Duration(20).Seconds())),
 		runner.WithInsecure(true),
 	)
 	if err != nil {
@@ -38,20 +44,38 @@ func main() {
 		os.Exit(1)
 	}
 
-	printer := printer.ReportPrinter{
+	result := printer.ReportPrinter{
 		Out:    os.Stdout,
 		Report: report,
 	}
+	result.Print("pretty")
 
 	ts := make(map[int]int64)
 	ts[50] = 10
-	ts[75] = 12
-	ts[90] = 15
-	ts[95] = 16
-	ts[99] = 25
+	ts[75] = 18
+	ts[90] = 40
+	ts[95] = 50
+	ts[99] = 60
 
-	ValidateLatency(ts, printer.Report)
-	printer.Print("influx-details")
+	ValidateLatency(ts, result.Report)
+
+	resultReport := ResultReport{
+		Name:         result.Report.Name,
+		TotalTime:    result.Report.Total,
+		Details:      result.Report.Details,
+		AverageTime:  result.Report.Average,
+		TotalRequest: result.Report.Count,
+	}
+	fmt.Println(resultReport)
+}
+
+func ValidatePerformanceBenchmarks(totalReqCount uint64, averageTime time.Duration, report *runner.Report) {
+	if totalReqCount > report.Count {
+		log.Fatalf("Total request count more than the expected")
+	}
+	if averageTime > report.Average {
+		log.Fatalf("Average request count more than the expected")
+	}
 }
 
 // ValidateLatency validate latency

@@ -1,5 +1,5 @@
 syntax = "proto3";
-
+//    https://developers.google.com/protocol-buffers/docs/style
 package blog;
 
 option go_package = "blog/blogpb";
